@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<head>
+  <title>Pusher Test</title>
+  <script src="https://js.pusher.com/8.2.0/pusher.min.js"></script>
+</head>
+<body>
+  <h1>Pusher Test</h1>
+  <p>
+    Try publishing an event to channel <code>orders.12</code>
+    with event name <code>OrderStatusUpdated</code>.
+  </p>
+  <p>
+    <h1>Order (Progress will change every minutes.)</h1>
+    <h3>Order #12</h3>
+    <h4 id="progress">Progress: 0</h4>
+  </p>
+</body>
+<script>
+
+    // Enable pusher logging - don't include this in production
+    Pusher.logToConsole = true;
+
+    var progress = 0;
+    var progressEle = document.getElementById('progress');
+    var pusher = new Pusher('38e402b1a7fdde813f48', {
+      cluster: 'ap1'
+    });
+
+    var channel = pusher.subscribe('orders.12');
+    channel.bind('OrderStatusUpdated', function(data) {
+        var result = data;
+      console.log(result);
+      progress = result.order.progress;
+      progressEle.innerHTML = `Progress: ${progress}`;
+    });
+  </script>
